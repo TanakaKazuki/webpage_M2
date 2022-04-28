@@ -39,10 +39,10 @@ def main(fname,furl,sitename):
         fileurl = furl[i]
         
         # (1/8) HTML ファイルを指定します
-        if os.path.exists('/Users/kazuki/Desktop/research/data_1619/senkei/html_data/'+sitename+'./'+filename+'.txt'):
-            src_file = Path(r'/Users/kazuki/Desktop/research/data_1619/senkei/html_data/'+sitename+'./'+filename+'.txt')
-        elif os.path.exists('/Users/kazuki/Desktop/research/data_1619/senkei/html_data/'+sitename+'./'+filename+'_NotFindTitle.txt'):
-            src_file = Path(r'/Users/kazuki/Desktop/research/data_1619/senkei/html_data/'+sitename+'./'+filename+'_NotFindTitle.txt')
+        if os.path.exists('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/senkei/html_data/'+sitename+'./'+filename+'.txt'):
+            src_file = Path(r'/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/senkei/html_data/'+sitename+'./'+filename+'.txt')
+        elif os.path.exists('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/senkei/html_data/'+sitename+'./'+filename+'_NotFindTitle.txt'):
+            src_file = Path(r'/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/senkei/html_data/'+sitename+'./'+filename+'_NotFindTitle.txt')
         
         # (2/8) HTML データを取得します
         with src_file.open('rb') as f:
@@ -122,7 +122,7 @@ def main(fname,furl,sitename):
             texts.append([fileurl ,h_tag.tag, h_text])
 
         # (8/8) テキストを CSV に保存します
-        csv_file = Path(r'/Users/kazuki/Desktop/research/data_1619/senkei/Headline_extraction/head_data/'+sitename+'/head_'+filename+'.csv')
+        csv_file = Path(r'/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/senkei/head_data/'+sitename+'/head_'+filename+'.csv')
         with csv_file.open('w', encoding='utf-8', newline='') as f:
             w = csv.writer(f)
             w.writerows(texts)
@@ -162,7 +162,7 @@ if __name__ == "__main__":
     #/Users/kazuki/Desktop/research/data_1619/senkei/html_data/correspondence_list_www.momoyama-usagi.csv
     
 
-    df = pd.read_csv('/Users/kazuki/Desktop/research/data_1619/senkei/html_data/correspondence_list_www.momoyama-usagi.csv',header=None)
+    df = pd.read_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/senkei/html_data/correspondence_list_www.momoyama-usagi.csv',header=None)
     filename = df[0]
     fileurl = df[1]
     print(filename.head(50))
