@@ -140,7 +140,7 @@ for i in range(len(sitename_list)):
     column_all_term = []
     column_all_term_num = []
     
-    df = pd.read_csv('/Users/kazuki/Desktop/research/data_1619/senkei/html_data/correspondence_list_'+sitename+'.csv',header=None)
+    df = pd.read_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/senkei/html_data/correspondence_list_'+sitename+'.csv',header=None)
     filename = df[0]
     fileurl = df[1]
     
@@ -151,7 +151,7 @@ for i in range(len(sitename_list)):
         fileurl = df[1][j]
         print('id',filename)
         
-        df_file_head = pd.read_csv('/Users/kazuki/Desktop/research/data_1619/senkei/Headline_extraction/head_data/'+sitename+'/head_'+filename+'.csv')
+        df_file_head = pd.read_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/senkei/head_data/'+sitename+'/head_'+filename+'.csv')
         #タイトルがあるなら
         #if len(df_file_head['URL']) > 0:
         print(len(df_file_head['URL']))
@@ -203,5 +203,5 @@ for i in range(len(sitename_list)):
     
     #print(df_output.head(3))
     
-    df_output.to_csv('head_data_site/'+sitename+"_header_term.csv",sep=',')
+    df_output.to_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/senkei/head_data_site/'+sitename+"_header_term.csv",sep=',')
     
