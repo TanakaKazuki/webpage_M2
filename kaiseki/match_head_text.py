@@ -3,11 +3,11 @@ import csv
 from pathlib import Path
 from lxml import html
 import os
-
+import MeCab
 import pandas as pd
 import ast
 
-def main(list_sitename,list_textname):
+def main(list_sitename,list_textname,limit):
   #各テキスト
   for i in range(len(list_textname)):
     text_name = list_textname[i]
@@ -18,7 +18,7 @@ def main(list_sitename,list_textname):
     #df_text[2]節内出現用語
     
     #各ウェブサイト
-    for site_num in range(21,len(list_sitename)):
+    for site_num in range(len(list_sitename)):
       site_name = list_sitename[site_num]
       
       column_setu_num = [] #節番号
@@ -55,24 +55,27 @@ def main(list_sitename,list_textname):
           page_name = df_site['タイトル'][page]
           page_url = df_site['URL'][page]
              
-          #setu_page_and = set(setu_term) & set(page_term)
-      
-          setu_page_and = check_match_yogo(page_term,setu_term)
           
-          if(len(setu_page_and) > 1):
-            print('setu_page_and',setu_page_and)
-            print('setu_term',setu_term)
-            print('page_term',page_term)
+          #print('setu_term',setu_term)
+          setu_term_mecab = get_nouns(setu_term)
+          #print('setu_term_mecab',setu_term_mecab)
+          
+          setu_page_and = check_match_yogo(page_term,setu_term_mecab)
+          
+          if(len(setu_page_and) >= int(limit)):
+            # print('setu_page_and',setu_page_and)
+            # print('setu_term',setu_term)
+            # print('page_term',page_term)
             
-            print('setu_page_and',setu_page_and)
-            print('setu_name',setu_name)
-            print('setu_term',setu_term)
-            print('page_name',page_name)
-            print('page_term',page_term)
+            # print('setu_page_and',setu_page_and)
+            # print('setu_name',setu_name)
+            # print('setu_term',setu_term)
+            # print('page_name',page_name)
+            # print('page_term',page_term)
             
             column_setu_num.append(setu_number)
             column_setu_name.append(setu_name)
-            column_setu_term.append(setu_term)
+            column_setu_term.append(setu_term_mecab)
             column_match_page.append(page_name)
             column_match_term.append(list(setu_page_and))
             column_match_url.append(page_url)
@@ -80,8 +83,8 @@ def main(list_sitename,list_textname):
             
         
         df_output = pd.DataFrame({'節番号':column_setu_num,'節名':column_setu_name,'マッチページ':column_match_page,'マッチページURL':column_match_url,'マッチ用語':column_match_term,'節内出現用語':column_setu_term,'マッチページ見出し用語':column_match_page_term})
-        df_output.to_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/text_match/kosen_biseki1/'+text_name+''+site_name+'.csv',sep=',',index=None) 
-        df_output.to_excel('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/text_match/kosen_biseki1/'+text_name+''+site_name+'.xlsx') 
+        df_output.to_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/text_match/kosen_biseki1/'+text_name+''+site_name+'_'+limit+'.csv',sep=',',index=None) 
+        df_output.to_excel('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/text_match/kosen_biseki1/'+text_name+''+site_name+'_'+limit+'.xlsx') 
         
   
   
@@ -102,6 +105,28 @@ def check_match_yogo(page_term,setu_term):
   
   return match_term
   
+
+def get_nouns(sentence_list):
+
+    nounAndPronoun = []
+    for i in range(len(sentence_list)):  
+        mecab = MeCab.Tagger ('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd')
+        text = sentence_list[i]
+        result = mecab.parse(text)
+        #print(result)
+        lines = result.split('\n')
+        
+        for line in lines:
+            feature = line.split('\t')
+            if len(feature) == 2:
+                info = feature[1].split(',')
+                hinshi = info[0]
+                if hinshi in ('名詞', '固有名詞'):
+                    nounAndPronoun.append(info[6])
+    
+    list(set(nounAndPronoun))
+                    
+    return nounAndPronoun
   
 
 
@@ -118,4 +143,8 @@ if __name__ == "__main__":
     list_textname = ['kosen_biseki1']
     #df_text = pd.read_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/textbook/'+textname+'.csv',header=None)
 
-    main(list_sitename,list_textname)
+
+    #テキスト内用語とページ見出し内用語の、一致用語数の閾値
+    limit = '2'
+    
+    main(list_sitename,list_textname,limit)
