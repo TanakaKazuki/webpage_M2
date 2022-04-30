@@ -6,61 +6,98 @@ import os
 
 import pandas as pd
 
-if __name__ == "__main__":
-    """読み込むファイル名の指定"""
-    #path
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_atarimae.biz.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_batapara.com.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_eman-physics.net.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_examist.jp.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_fromhimuka.com.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_hiraocafe.com.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_hooktail.sub.jp.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_manabitimes.jp.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_math-fun.net.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_math-juken.com.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_opencourse.doshisha.ac.jp.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_racco.mikeneko.jp.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_ramenhuhu.com.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_rikeilabo.com.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_tau.doshisha.ac.jp.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_ufcpp.net.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_univ-juken.com.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_univ-study.net.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_w3e.kanazawa-it.ac.jp.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_www.geisya.or.jp.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_www.maroon.dti.ne.jp.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_www.momoyama-usagi.com.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_www.sci.hokudai.ac.jp.csv
-    #/Users/kazuki/Desktop/research/data_1619/kaiseki/html_data/correspondence_list_yorikuwa.com.csv
-    df = pd.read_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/html_data/correspondence_list_yorikuwa.com.csv',header=None)
-    filename = df[0]
-    fileurl = df[1]
-    print(filename.head(50))
-    print(fileurl.head(50))
-    
-    #'atarimae.biz'
-    #'batapara.com'
-    #'eman-physics.net'
-    #'examist.jp'
-    #'fromhimuka.com'
-    #'hiraocafe.com'
-    #'hooktail.sub.jp'
-    #'manabitimes.jp'
-    #'math-fun.net'
-    #'math-juken.com'
-    #'racco.mikeneko.jp'
-    #'ramenhuhu.com'
-    #'tau.doshisha.ac.jp'
-    #'ufcpp.net'
-    #'univ-juken.com'
-    #'univ-study.net'
-    #'w3e.kanazawa-it.ac.jp'
-    #'www.geisya.or.jp'
-    #'www.maroon.dti.ne.jp'
-    #'www.momoyama-usagi.com'
-    #'www.sci.hokudai.ac.jp'
-    #'yorikuwa.com'
-    sitename ='yorikuwa.com'
 
-    main(filename,fileurl,sitename)
+def main(list_sitename,list_textname):
+  #各テキスト
+  for i in range(len(list_textname)):
+    text_name = list_textname[i]
+    df_text = pd.read_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/textbook/'+text_name+'.csv')
+    print(df_text)
+    #df_text[0]節番号
+    #df_text[1]節名
+    #df_text[2]節内出現用語
+    
+    #各ウェブサイト
+    for site_num in range(21,len(list_sitename)):
+      site_name = list_sitename[site_num]
+      
+      column_setu_num = [] #節番号
+      column_setu_name = [] #節名
+      column_match_page = [] #マッチしたページ
+      column_match_term = [] #マッチした用語
+      column_match_url = [] #マッチしたページのURL
+      column_setu_term = [] #節内出現用語
+      column_match_page_term = [] #マッチしたページ見出し内用語
+      
+      #テキスト内の各節
+      for setu_num in range(len(df_text['setu_num'])):
+        setu_term = df_text['term'][setu_num].split('/')
+        #print(setu_term)
+        setu_name = df_text['setu_name'][setu_num]
+        setu_number = df_text['setu_num'][setu_num]
+        #print(setu_name)
+      
+        
+        #サイト内全ページの見出し出現用語
+        df_site = pd.read_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/head_data_site/'+site_name+'_header_term.csv')
+        #id,URL,タイトル,タイトル・見出し出現用語,タイトル・見出し出現用語数
+        
+        #各ページ
+        for page in range(len(df_site['タイトル'])):
+          #各ページ内　タイトル・見出し出現用語
+          page_term = df_site['タイトル・見出し出現用語'][page]
+          page_name = df_site['タイトル'][page]
+          page_url = df_site['URL'][page]
+          
+          
+          #setu_page_and = set(setu_term) & set(page_term)
+      
+          setu_page_and = check_match_yogo(page_term,setu_term)
+          
+          if(len(setu_page_and) > 1):
+            print('setu_page_and',setu_page_and)
+            print('setu_term',setu_term)
+            print('page_term',page_term)
+            
+            # print('setu_page_and',setu_page_and)
+            # print('setu_name',setu_name)
+            # print('setu_term',setu_term)
+            # print('page_name',page_name)
+            # print('page_term',page_term)
+            
+            column_setu_num.append(setu_number)
+            column_setu_name.append(setu_name)
+            column_setu_term.append(setu_term)
+            column_match_page.append(page_name)
+            column_match_term.append(list(setu_page_and))
+            column_match_url.append(page_url)
+            column_match_page_term.append(page_term)
+            
+        
+        df_output = pd.DataFrame({'節番号':column_setu_num,'節名':column_setu_name,'マッチページ':column_match_page,'マッチページURL':column_match_url,'マッチ用語':column_match_term,'節内出現用語':column_setu_term,'マッチページ見出し用語':column_match_page_term})
+        df_output.to_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/text_match/kosen_biseki1/'+text_name+''+site_name+'.csv',sep=',',index=None) 
+        df_output.to_excel('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/text_match/kosen_biseki1/'+text_name+''+site_name+'.xlsx') 
+        
+  
+  #df_textを上から順に見ていき、各サイトでマッチングさせていく
+  
+  
+def check_match_yogo(page_term,setu_term){
+  
+}
+
+
+if __name__ == "__main__":    
+    list_sitename =['atarimae.biz','batapara.com','eman-physics.net','examist.jp','fromhimuka.com',
+                    'hiraocafe.com','hooktail.sub.jp','manabitimes.jp','math-fun.net','math-juken.com',
+                    'racco.mikeneko.jp','ramenhuhu.com','tau.doshisha.ac.jp','ufcpp.net','univ-juken.com',
+                    'univ-study.net','w3e.kanazawa-it.ac.jp','www.geisya.or.jp','www.maroon.dti.ne.jp',
+                    'www.momoyama-usagi.com','www.sci.hokudai.ac.jp','yorikuwa.com']
+    
+    
+    #sitename ='yorikuwa.com'
+    
+    list_textname = ['kosen_biseki1']
+    #df_text = pd.read_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/textbook/'+textname+'.csv',header=None)
+
+    main(list_sitename,list_textname)
