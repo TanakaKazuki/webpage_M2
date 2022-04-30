@@ -7,7 +7,7 @@ import MeCab
 import pandas as pd
 import ast
 
-def main(list_sitename,list_textname,limit):
+def main(list_sitename,list_textname,limit,delete_term):
   #各テキスト
   for i in range(len(list_textname)):
     text_name = list_textname[i]
@@ -23,6 +23,7 @@ def main(list_sitename,list_textname,limit):
       setu_term = df_text['term'][setu].split('/')
       setu_term_mecab = get_nouns(setu_term)
       column_setu_mecab.append(setu_term_mecab)
+      
     df_text['term_mecab'] = column_setu_mecab
     df_text.to_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/textbook/'+text_name+'_mecab.csv',sep=',',index=None) 
     df_text.to_excel('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/textbook/'+text_name+'_mecab.xlsx') 
@@ -65,13 +66,16 @@ def main(list_sitename,list_textname,limit):
           #各ページ内　タイトル・見出し出現用語
           page_term = df_site['タイトル・見出し出現用語'][page]
           
+          
           page_name = df_site['タイトル'][page]
           page_url = df_site['URL'][page]
              
           
           setu_page_and = check_match_yogo(page_term,setu_term)
+          setu_page_and = term_delete(delete_term,setu_page_and)
           
-          if(len(setu_page_and) >= int(limit)):
+          
+          if(setu_page_and and len(setu_page_and) >= int(limit)):
             print('setu_page_and',setu_page_and)
             print('setu_term',setu_term)
             print('page_term',page_term)
@@ -84,7 +88,7 @@ def main(list_sitename,list_textname,limit):
             
             column_setu_num.append(setu_number)
             column_setu_name.append(setu_name)
-            column_setu_term.append(setu_term_mecab)
+            column_setu_term.append(setu_term)
             column_match_page.append(page_name)
             column_match_term.append(list(setu_page_and))
             column_match_url.append(page_url)
@@ -95,7 +99,14 @@ def main(list_sitename,list_textname,limit):
         df_output.to_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/text_match/kosen_biseki1/'+text_name+''+site_name+'_'+limit+'.csv',sep=',',index=None) 
         df_output.to_excel('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/text_match/kosen_biseki1/'+text_name+''+site_name+'_'+limit+'.xlsx') 
         
-  
+
+#見出し内出現用語　と　テキスト内出現用語 から不用語を除く
+def term_delete(delete_term,match_term):
+  for r in delete_term:
+    #一致語があり、かつその中に不用語があるなら
+    if match_term and r in match_term:
+      match_term = match_term.remove(r)
+  return match_term
   
   
 #各ページ内出現用語と各節内出現用語の、一致用語を返す
@@ -152,8 +163,8 @@ if __name__ == "__main__":
     list_textname = ['kosen_biseki1']
     #df_text = pd.read_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/textbook/'+textname+'.csv',header=None)
 
-
+    delete_term = ['法','性','定理','定義','関数','*']
     #テキスト内用語とページ見出し内用語の、一致用語数の閾値
     limit = '2'
     
-    main(list_sitename,list_textname,limit)
+    main(list_sitename,list_textname,limit,delete_term)
