@@ -5,14 +5,14 @@ from lxml import html
 import os
 
 import pandas as pd
-
+import ast
 
 def main(list_sitename,list_textname):
   #各テキスト
   for i in range(len(list_textname)):
     text_name = list_textname[i]
     df_text = pd.read_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/textbook/'+text_name+'.csv')
-    print(df_text)
+    
     #df_text[0]節番号
     #df_text[1]節名
     #df_text[2]節内出現用語
@@ -42,14 +42,19 @@ def main(list_sitename,list_textname):
         df_site = pd.read_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/head_data_site/'+site_name+'_header_term.csv')
         #id,URL,タイトル,タイトル・見出し出現用語,タイトル・見出し出現用語数
         
+        #csv形式によりstr型になってしまったリストをlist型に戻す
+        df_site['タイトル・見出し出現用語'] = [ast.literal_eval(d) for d in df_site['タイトル・見出し出現用語']]
+        df_site['タイトル内単語'] = [ast.literal_eval(d) for d in df_site['タイトル内単語']]
+        df_site['見出し内単語'] = [ast.literal_eval(d) for d in df_site['見出し内単語']]
+        
         #各ページ
         for page in range(len(df_site['タイトル'])):
           #各ページ内　タイトル・見出し出現用語
           page_term = df_site['タイトル・見出し出現用語'][page]
+          
           page_name = df_site['タイトル'][page]
           page_url = df_site['URL'][page]
-          
-          
+             
           #setu_page_and = set(setu_term) & set(page_term)
       
           setu_page_and = check_match_yogo(page_term,setu_term)
@@ -59,11 +64,11 @@ def main(list_sitename,list_textname):
             print('setu_term',setu_term)
             print('page_term',page_term)
             
-            # print('setu_page_and',setu_page_and)
-            # print('setu_name',setu_name)
-            # print('setu_term',setu_term)
-            # print('page_name',page_name)
-            # print('page_term',page_term)
+            print('setu_page_and',setu_page_and)
+            print('setu_name',setu_name)
+            print('setu_term',setu_term)
+            print('page_name',page_name)
+            print('page_term',page_term)
             
             column_setu_num.append(setu_number)
             column_setu_name.append(setu_name)
@@ -79,12 +84,25 @@ def main(list_sitename,list_textname):
         df_output.to_excel('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/text_match/kosen_biseki1/'+text_name+''+site_name+'.xlsx') 
         
   
-  #df_textを上から順に見ていき、各サイトでマッチングさせていく
   
   
-def check_match_yogo(page_term,setu_term){
+#各ページ内出現用語と各節内出現用語の、一致用語を返す
+def check_match_yogo(page_term,setu_term):
+  # print('page_term',page_term)
+  # print('setu_term',setu_term)
+  set_page_term = set(page_term)
+  set_setu_term = set(setu_term)
   
-}
+  
+  match_term = list(set_page_term & set_setu_term)
+  # print('set_page_term',set_page_term)
+  # print('set_setu_term',set_setu_term)
+  # print('match_term',match_term)
+  
+  
+  return match_term
+  
+  
 
 
 if __name__ == "__main__":    
