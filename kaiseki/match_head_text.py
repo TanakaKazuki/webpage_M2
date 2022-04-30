@@ -17,6 +17,19 @@ def main(list_sitename,list_textname,limit):
     #df_text[1]節名
     #df_text[2]節内出現用語
     
+    #各節内出現用語をMecabで分割し、ページ内出現用語の表記と合わせる
+    column_setu_mecab = []
+    for setu in range(len(df_text['term'])):
+      setu_term = df_text['term'][setu].split('/')
+      setu_term_mecab = get_nouns(setu_term)
+      column_setu_mecab.append(setu_term_mecab)
+    df_text['term_mecab'] = column_setu_mecab
+    df_text.to_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/textbook/'+text_name+'_mecab.csv',sep=',',index=None) 
+    df_text.to_excel('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/textbook/'+text_name+'_mecab.xlsx') 
+
+        
+      
+    
     #各ウェブサイト
     for site_num in range(len(list_sitename)):
       site_name = list_sitename[site_num]
@@ -31,7 +44,7 @@ def main(list_sitename,list_textname,limit):
       
       #テキスト内の各節
       for setu_num in range(len(df_text['setu_num'])):
-        setu_term = df_text['term'][setu_num].split('/')
+        setu_term = df_text['term_mecab'][setu_num]
         #print(setu_term)
         setu_name = df_text['setu_name'][setu_num]
         setu_number = df_text['setu_num'][setu_num]
@@ -56,22 +69,18 @@ def main(list_sitename,list_textname,limit):
           page_url = df_site['URL'][page]
              
           
-          #print('setu_term',setu_term)
-          setu_term_mecab = get_nouns(setu_term)
-          #print('setu_term_mecab',setu_term_mecab)
-          
-          setu_page_and = check_match_yogo(page_term,setu_term_mecab)
+          setu_page_and = check_match_yogo(page_term,setu_term)
           
           if(len(setu_page_and) >= int(limit)):
-            # print('setu_page_and',setu_page_and)
-            # print('setu_term',setu_term)
-            # print('page_term',page_term)
+            print('setu_page_and',setu_page_and)
+            print('setu_term',setu_term)
+            print('page_term',page_term)
             
-            # print('setu_page_and',setu_page_and)
-            # print('setu_name',setu_name)
-            # print('setu_term',setu_term)
-            # print('page_name',page_name)
-            # print('page_term',page_term)
+            print('setu_page_and',setu_page_and)
+            print('setu_name',setu_name)
+            print('setu_term',setu_term)
+            print('page_name',page_name)
+            print('page_term',page_term)
             
             column_setu_num.append(setu_number)
             column_setu_name.append(setu_name)
@@ -124,7 +133,7 @@ def get_nouns(sentence_list):
                 if hinshi in ('名詞', '固有名詞'):
                     nounAndPronoun.append(info[6])
     
-    list(set(nounAndPronoun))
+    nounAndPronoun = list(set(nounAndPronoun))
                     
     return nounAndPronoun
   
