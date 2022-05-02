@@ -152,8 +152,9 @@ def get_nouns(sentence_list):
 
 if __name__ == "__main__":    
     list_sitename =['atarimae.biz','batapara.com','eman-physics.net','examist.jp','fromhimuka.com',
-                    'hiraocafe.com','hooktail.sub.jp','manabitimes.jp','math-fun.net','math-juken.com',
-                    'racco.mikeneko.jp','ramenhuhu.com','tau.doshisha.ac.jp','ufcpp.net','univ-juken.com',
+                    'hiraocafe.com','hooktail.sub.jp','manabitimes.jp','math-fun.net',
+                    'opencourse.doshisha.ac.jp','math-juken.com','racco.mikeneko.jp','ramenhuhu.com',
+                    'rikeilabo.com','tau.doshisha.ac.jp','ufcpp.net','univ-juken.com',
                     'univ-study.net','w3e.kanazawa-it.ac.jp','www.geisya.or.jp','www.maroon.dti.ne.jp',
                     'www.momoyama-usagi.com','www.sci.hokudai.ac.jp','yorikuwa.com']
     
