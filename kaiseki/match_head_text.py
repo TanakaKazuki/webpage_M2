@@ -96,8 +96,8 @@ def main(list_sitename,list_textname,limit,delete_term):
             
         
         df_output = pd.DataFrame({'節番号':column_setu_num,'節名':column_setu_name,'マッチページ':column_match_page,'マッチページURL':column_match_url,'マッチ用語':column_match_term,'節内出現用語':column_setu_term,'マッチページ見出し用語':column_match_page_term})
-        df_output.to_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/text_match/kosen_biseki1/'+text_name+''+site_name+'_'+limit+'.csv',sep=',',index=None) 
-        df_output.to_excel('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/text_match/kosen_biseki1/'+text_name+''+site_name+'_'+limit+'.xlsx') 
+        df_output.to_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/text_match/'+text_name+'/'+text_name+''+site_name+'_'+limit+'.csv',sep=',',index=None) 
+        df_output.to_excel('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/text_match/'+text_name+'/'+text_name+''+site_name+'_'+limit+'.xlsx') 
         
 
 #見出し内出現用語　と　テキスト内出現用語 から不用語を除く
