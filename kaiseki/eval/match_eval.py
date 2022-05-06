@@ -121,7 +121,7 @@ def eval_calc(df_handmatch_neo,text_name,site_name):
 if __name__ == "__main__":    
     
     #list_handmatch_site = ['manabitimes.jp','univ-juken.com']
-    list_handmatch_site = ['univ-juken.com']
+    list_handmatch_site = ['univ-juken.com','manabitimes.jp']
     list_textname = ['kosen_biseki1']
     limit = '1'
   
