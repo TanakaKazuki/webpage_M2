@@ -209,7 +209,6 @@ def eval_calc(df_handmatch_neo,text_name,site_name,dir):
   
   #matchのうち、’変更無し’・’タイトル変更あり’の内訳調査
   
-  
   #変更無し
   df_bool_match_no_titlechange = ((df_handmatch_neo['eval_match'] == 'match') & (df_handmatch_neo['補足']=='変更無し'))
   print('match_no_titlechange sum タイトル変更無し')
