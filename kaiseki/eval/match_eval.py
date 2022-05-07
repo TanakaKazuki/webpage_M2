@@ -4,9 +4,13 @@ import os
 from re import A
 import pandas as pd
 import numpy as np
-
+import datetime as dt
 
 def main(list_handmatch_site,list_textname,limit):
+  
+  
+  dir_handmatch,dir_eval= make_derectory()
+  
   for i in  range(len(list_handmatch_site)):
     text_name = list_textname[0]
     site_name = list_handmatch_site[i]
@@ -22,11 +26,11 @@ def main(list_handmatch_site,list_textname,limit):
     #df_handmatch中のページが、df_match_resultにあるかどうか
     ##タイトルは変わってるため、URLで判断
     df_handmatch_neo = eval(df_match_result,df_handmatch)
-    df_handmatch_neo.to_csv('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/handmatch_eval/eval_handmatch_'+text_name+'_'+site_name+'_'+limit+'.csv',sep=',',index=None) 
-    df_handmatch_neo.to_excel('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/handmatch_eval/eval_handmatch_'+text_name+'_'+site_name+'_'+limit+'.xlsx') 
+    df_handmatch_neo.to_csv(dir_handmatch +'/eval_handmatch_'+text_name+'_'+site_name+'_'+limit+'.csv',sep=',',index=None) 
+    df_handmatch_neo.to_excel(dir_handmatch +'/eval_handmatch_'+text_name+'_'+site_name+'_'+limit+'.xlsx') 
     
     #出力ファイルの中で'match'、'not match'の内訳の出力、csv、xlsx
-    eval_calc(df_handmatch_neo,text_name,site_name)
+    eval_calc(df_handmatch_neo,text_name,site_name,dir_eval)
     
     
     
@@ -55,9 +59,40 @@ def eval(df_match_result,df_handmatch):
       print('not match')
   
   return df_handmatch_neo
-    
+
+#プログラム実行日のフォルダを作る
+def make_derectory():
+  dt_now = dt.datetime.now()
+ 
+  #フォルダ名用にyyyymmddの文字列を取得する
+  mmdd = dt_now.strftime('%m%d')
+ 
+  #作成するフォルダ名を定義する
+  directory_name = u'handmatch_eval_' + mmdd
+ 
+  #現在のフォルダパスを取得する(プログラムが実行されているフォルダパス)
+  #current_directory = os.path.dirname(os.path.abspath(__file__))
+ 
+  #作成のために確認するフォルダパスを作成する
+  create_directory =  '/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/handmatch_eval'+ '/' + directory_name
+ 
+  #対象フォルダが存在しない場合
+  if(not (os.path.exists(create_directory))):
+ 
+    #フォルダを作成
+    os.mkdir(create_directory)
   
-def eval_calc(df_handmatch_neo,text_name,site_name):
+  directory_name = u'eval_calc' + mmdd
+  create_directory2 = '/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/handmatch_eval/eval_calc/'+ '/' + directory_name
+  if(not (os.path.exists(create_directory2))):
+ 
+    #フォルダを作成
+    os.mkdir(create_directory2)
+  
+  return create_directory,create_directory2
+
+  
+def eval_calc(df_handmatch_neo,text_name,site_name,dir):
   #人手の結果と、マッチしたページ、マッチしなかったページの内訳を見る
   #’タイトル変更無し’・’タイトル変更あり’
   #また、マッチしなかったページのうち、別の節でならマッチしているか
@@ -107,7 +142,7 @@ def eval_calc(df_handmatch_neo,text_name,site_name):
   
   
 
-  with open('/Users/kazuki/Desktop/research/data_Research_M2/R_Data_M2/kaiseki/handmatch_eval/eval_calc/eval_calc_handmatch_'+text_name+'_'+site_name+'_'+limit+'.csv', 'w', newline='') as output_file:
+  with open(dir +'/eval_calc_handmatch_'+text_name+'_'+site_name+'_'+limit+'.csv', 'w', newline='') as output_file:
       writer = csv.writer(output_file)
       writer.writerow(["","matchページ", "", "not matchページ"])
       writer.writerow(["ページ数",df_bool_match.sum(), df_bool_notmatch.sum()])
@@ -123,6 +158,6 @@ if __name__ == "__main__":
     #list_handmatch_site = ['manabitimes.jp','univ-juken.com']
     list_handmatch_site = ['univ-juken.com','manabitimes.jp']
     list_textname = ['kosen_biseki1']
-    limit = '1'
+    limit = '2'
   
     main(list_handmatch_site,list_textname,limit)
